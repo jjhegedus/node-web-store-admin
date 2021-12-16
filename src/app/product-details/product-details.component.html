@@ -1,0 +1,37 @@
+﻿<div class="product-details" *ngIf="product">
+  <h2>{{product.name}} details</h2>
+  <div>
+    <img id="mainImage" src="{{mainImageUrl}}" class="img-responsive" alt="Main mouse image" />
+    <label>name: </label>
+    <div class="input-div">
+      <input [(ngModel)]="product.name" placeholder="name">
+    </div>
+    <label>decription: </label>
+    <div class="input-div">
+      <textarea style="height:3em;" [(ngModel)]="product.description" placeholder="decription"></textarea>
+    </div>
+    <label>price: </label>
+    <div class="input-div">
+      <input [(ngModel)]="product.price" placeholder="price">
+    </div>
+
+    <ul class="product-images">
+      <li *ngFor="let productImage of productImages">
+        <img id="mainImage" src="{{awsBucket + productImage.Key}}" class="img-responsive" alt="product image" />
+        <button (click)="deleteImage(productImage._id)">-</button>
+        <button (click)="moveImageUp(productImage._id)">Up</button>
+        <button (click)="moveImageDown(productImage._id)">Down</button>
+      </li>
+    </ul>
+
+
+  </div>
+  <button (click)="goBack()">Back</button>
+  <button (click)="save()">Save</button>
+  <button *ngIf="!newProduct" (click)="addImage()">Add Image</button>
+
+  <input style="visibility:hidden" type="file" class="add-image-input-button" id="addImageInput" (change)="imageAdded()" value="Add Image" />
+</div>
+
+<p>Product Categories</p>
+<my-product-product-categories-editor [productId]="productId"></my-product-product-categories-editor> 

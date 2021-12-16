@@ -1,0 +1,11 @@
+﻿<p>
+  These are the latest products going viral.
+</p>
+<ul class="products">
+  <li *ngFor="let product of products">
+    <span (click)="gotoDetail(product.id)">{{product.name}}</span>
+    <button class="delete"
+            (click)="deleteProduct(product);$event.stopProagation()">x</button>
+  </li>
+</ul>
+<button class="add" (click)="addProduct();$event.stopPropagation()">Add Product</button>

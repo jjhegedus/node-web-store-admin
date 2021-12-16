@@ -1,0 +1,2 @@
+C:\Projects\Git\apgv-admin\obj\Debug\apgv-admin.njsprojResolveAssemblyReference.cache
+C:\Projects\Git\apgv-admin\bin\Microsoft.NodejsTools.WebRole.dll

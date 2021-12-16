@@ -1,0 +1,41 @@
+﻿// styles applied on :host are applied on the current component, "app" in this case
+:host {
+  display: block;
+}
+
+header {
+  background-color: #4800ff;
+  padding: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+main {
+  padding: .2em;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin-top: 3.5em;
+  margin-bottom: 3.5em;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.8em;
+  height: 2em;
+}
+
+.cart{
+display:block;
+margin: 1.2em auto 0px;
+float: right;
+padding-right:1em;
+}
+
+.cart-count-label{
+color:red;
+margin: .2em -1em;
+float:right;
+}

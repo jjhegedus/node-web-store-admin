@@ -1,0 +1,55 @@
+﻿<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img class="navbar-brand" href="index.html" alt="Brand" src="/img/apgv-logo.jpg"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li>
+          <a [class]="[active]" [routerLink]="['']">Home</a>
+        </li>
+        <li>
+        <li>
+          <a [routerLink]="['about']">About</a>
+        </li>
+        <li>
+          <a [routerLink]="['product-admin']">Product Admin</a>
+        </li>
+        <li>
+          <a [routerLink]="['product-categories']">Product Categories</a>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input class="form-control" type="text" name="search" placeholder="Search" />
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;Cart</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<main>
+  <h1 style="color:crimson">{{title}}</h1>
+
+  <router-outlet></router-outlet>
+</main>
+<footer class="navbar navbar-default navbar-fixed-bottom">
+  <div [hidden]="currentPage != 'Home'">
+    Category:
+    <select id="categorySelect" name="categorySelect">
+        <option value="All">All</option>
+        <option *ngFor="let productCategory of productCategories" value="{{productCategory.Key}}">{{productCategory.Key}}</option>
+      </select>
+  </div>
+  <a [href]="url">All Products Gone Viral</a>
+</footer>
