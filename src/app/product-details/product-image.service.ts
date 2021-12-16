@@ -7,35 +7,19 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { ConfigService } from '../config/config.service';
 //import { Product } from '../products/product';
 
 @Injectable()
 export class ProductImageService {
     title = 'Product Service';
     //private productImageUrl = 'http://localhost:8081/products/images'; // URL to web api
-    //private productImageUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products/images'; // URL to web api   //private headers = new Headers({ 'Content-Type': 'application/json' });
+    private productImageUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products/images'; // URL to web api   //private headers = new Headers({ 'Content-Type': 'application/json' });
 
     //private imagesUrl = 'https://s3.amazonaws.com/apgv-public-read/img/';
-    //private productsUrl = 'http://localhost:8081/products'
-    //private productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products';
-    private productsUrl = '';
-    private productImageUrl = '';
-    private config: any;
+    //private productsUrl = 'http://localhost:8081/products';
+    private productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products'; // URL to web api
 
-
-    constructor(
-        private http: Http,
-        private configService: ConfigService
-    ) {
-        this.configService.getConfig(
-            (config) => {
-                this.config = config;
-
-                this.productsUrl = this.config.baseUrl + '/products';
-                this.productImageUrl = this.config.baseUrl + '/products/images';
-            });
-    }
+    constructor(private http: Http) { }
 
 
     private handleError(error: any): Promise<any> {
@@ -45,11 +29,6 @@ export class ProductImageService {
 
     getMainImageSignature(fileType: string, productId: string): Observable<any> {
         const url = this.productImageUrl + "/sign?file_name=main.jpg&file_type=" + fileType + "&product_id=" + productId;
-        return this.http.get(url).map(res => res.json());
-    }
-
-    getImageSignature(fileName: string, fileType: string, productId: string): Observable<any> {
-        const url = this.productImageUrl + "/sign?file_name=" + fileName + "&file_type=" + fileType + "&product_id=" + productId;
         return this.http.get(url).map(res => res.json());
     }
 
@@ -95,11 +74,6 @@ export class ProductImageService {
     moveImageDown(imageId: string): Observable<any> {
         var url = this.productImageUrl + "/" + imageId + "/move-down";
         return this.http.put(url, null).map(res => res.json());
-    }
-
-    delete(imageId: string): Observable<any> {
-        var url = this.productImageUrl + "/" + imageId;
-        return this.http.delete(url, null).map(res => res.json());
     }
 
 }

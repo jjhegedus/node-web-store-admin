@@ -18,10 +18,7 @@
           <a [routerLink]="['about']">About</a>
         </li>
         <li>
-          <a [routerLink]="['product-admin']">Product Admin</a>
-        </li>
-        <li>
-          <a [routerLink]="['product-categories']">Product Categories</a>
+          <a [routerLink]="['products']">Products</a>
         </li>
       </ul>
       <form class="navbar-form navbar-left">
@@ -44,12 +41,5 @@
   <router-outlet></router-outlet>
 </main>
 <footer class="navbar navbar-default navbar-fixed-bottom">
-  <div [hidden]="currentPage != 'Home'">
-    Category:
-    <select id="categorySelect" name="categorySelect">
-        <option value="All">All</option>
-        <option *ngFor="let productCategory of productCategories" value="{{productCategory.Key}}">{{productCategory.Key}}</option>
-      </select>
-  </div>
   <a [href]="url">All Products Gone Viral</a>
 </footer>

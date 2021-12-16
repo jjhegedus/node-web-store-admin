@@ -24,18 +24,12 @@ main {
 footer {
   text-align: center;
   font-size: 0.8em;
-  height: 2em;
+  height: 1em;
 }
 
-.cart{
-display:block;
-margin: 1.2em auto 0px;
-float: right;
-padding-right:1em;
-}
-
-.cart-count-label{
-color:red;
-margin: .2em -1em;
-float:right;
+.buy-now-button {
+  font-size: 1.2em;
+  background-color: bisque;
+  color: black;
+  font-weight: bold;
 }

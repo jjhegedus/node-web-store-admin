@@ -1,21 +1,18 @@
-import { Component } from '@angular/core';
-
-import { CartService } from '22ndtech-angular-lib';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'my-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss']
+  selector: 'my-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
-    pageName: string = 'Home';
+export class HomeComponent implements OnInit {
 
-    constructor(
-        private cartService: CartService
-    ) {
-        console.log(this.cartService);
+  constructor() {
+    // Do stuff
+  }
 
-    }
-
+  ngOnInit() {
+    console.log('Hello Home');
+  }
 
 }

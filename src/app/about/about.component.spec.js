@@ -1,6 +1,6 @@
 "use strict";
-var testing_1 = require('@angular/core/testing');
-var about_component_1 = require('./about.component');
+var testing_1 = require("@angular/core/testing");
+var about_component_1 = require("./about.component");
 describe('About Component', function () {
     beforeEach(function () {
         testing_1.TestBed.configureTestingModule({ declarations: [about_component_1.AboutComponent] });

@@ -1,7 +1,7 @@
 "use strict";
-var testing_1 = require('@angular/core/testing');
-var product_service_1 = require('./product.service');
-var http_1 = require('@angular/http');
+var testing_1 = require("@angular/core/testing");
+var product_service_1 = require("./product.service");
+var http_1 = require("@angular/http");
 //import 'rxjs/add/operator/toPromise';
 //import { Product } from './product';
 describe('Product Service', function () {

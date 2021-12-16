@@ -1,8 +1,8 @@
 "use strict";
-require('core-js/client/shim');
-require('reflect-metadata');
+require("core-js/client/shim");
+require("reflect-metadata");
 require('zone.js/dist/zone');
-require('ts-helpers');
+require("ts-helpers");
 if (process.env.ENV === 'build') {
 }
 else {

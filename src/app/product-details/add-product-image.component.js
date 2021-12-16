@@ -1,25 +1,18 @@
 "use strict";
-var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
-var common_1 = require('@angular/common');
-require('rxjs/add/operator/switchMap');
-var config_service_1 = require('../config/config.service');
-var product_service_1 = require('../products/product.service');
-var product_image_service_1 = require('./product-image.service');
-var ProductAddComponent = (function () {
-    function ProductAddComponent(configService, productService, productImageService, route, location) {
-        var _this = this;
-        this.configService = configService;
+var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
+var common_1 = require("@angular/common");
+require("rxjs/add/operator/switchMap");
+var product_service_1 = require("../products/product.service");
+var product_image_service_1 = require("./product-image.service");
+var AddProductImageComponent = (function () {
+    function AddProductImageComponent(productService, productImageService, route, location) {
         this.productService = productService;
         this.productImageService = productImageService;
         this.route = route;
         this.location = location;
-        this.configService.getConfig(function (config) {
-            _this.config = config;
-            _this.awsBucket = config.awsBucket;
-        });
     }
-    ProductAddComponent.prototype.ngOnInit = function () {
+    AddProductImageComponent.prototype.ngOnInit = function () {
         var _this = this;
         console.log('product-details.component:ngOnInit()');
         this.route.params.switchMap(function (params) {
@@ -27,13 +20,14 @@ var ProductAddComponent = (function () {
         })
             .subscribe(function (product) {
             _this.product = product;
+            _this.baseUrl = 'https://s3.amazonaws.com/apgv-public-read/';
             _this.getProductImages();
         });
     };
-    ProductAddComponent.prototype.goBack = function () {
+    AddProductImageComponent.prototype.goBack = function () {
         this.location.back();
     };
-    ProductAddComponent.prototype.save = function () {
+    AddProductImageComponent.prototype.save = function () {
         var _this = this;
         this.productService.updateProduct(this.product)
             .subscribe(function () { return console.log('this.product.id = ' + _this.product.id); });
@@ -54,11 +48,7 @@ var ProductAddComponent = (function () {
                 .subscribe(function (response) { return _this.afterSignRequest(response); });
         }
     };
-    ProductAddComponent.prototype.onMainImageChange = function () {
-        var fileInputElement = document.getElementById("mainImagePicker");
-        this.file = fileInputElement.files[0];
-    };
-    ProductAddComponent.prototype.onImageChange = function (key) {
+    AddProductImageComponent.prototype.onImageChange = function (key) {
         var fileInputElement = document.getElementById("imagePicker");
         this.file = fileInputElement.files[0];
         console.log('key = ' + key);
@@ -74,7 +64,7 @@ var ProductAddComponent = (function () {
     //    }
     //    xhr.send();
     //}
-    ProductAddComponent.prototype.upload = function (file, signed_request, url, done) {
+    AddProductImageComponent.prototype.upload = function (file, signed_request, url, done) {
         var _this = this;
         var xhr = new XMLHttpRequest();
         xhr.open("PUT", signed_request);
@@ -89,7 +79,7 @@ var ProductAddComponent = (function () {
         };
         xhr.send(file);
     };
-    ProductAddComponent.prototype.delete = function (file, signed_request, url, done) {
+    AddProductImageComponent.prototype.delete = function (file, signed_request, url, done) {
         var _this = this;
         var xhr = new XMLHttpRequest();
         xhr.open("DELETE", signed_request);
@@ -100,15 +90,15 @@ var ProductAddComponent = (function () {
         };
         xhr.send();
     };
-    ProductAddComponent.prototype.deleteMainImage = function () {
+    AddProductImageComponent.prototype.deleteMainImage = function () {
         //this.productImageService.getDeleteMainImageAuthorizationHeader('image/jpeg', this.product.id)
         //    .subscribe((response) => this.afterGetDeleteMainImageAuthorizationHeader(response));
         var _this = this;
         this.productImageService.deleteMainImage(this.product.id)
             .subscribe(function () { return _this.afterDeleteMainImage(); });
     };
-    ProductAddComponent.prototype.afterGetDeleteMainImageAuthorizationHeader = function (response) {
-        var url = this.awsBucket + 'img/' + this.product.id + '/main.jpg?now=' + new Date().getTime();
+    AddProductImageComponent.prototype.afterGetDeleteMainImageAuthorizationHeader = function (response) {
+        var url = 'https://apgv-public-read.s3.amazonaws.com/img/' + this.product.id + '/main.jpg?now=' + new Date().getTime();
         var xhr = new XMLHttpRequest();
         xhr.open("DELETE", url);
         xhr.setRequestHeader('Authorization', response.Authorization);
@@ -121,53 +111,56 @@ var ProductAddComponent = (function () {
         };
         xhr.send();
     };
-    ProductAddComponent.prototype.afterDeleteMainImage = function () {
+    AddProductImageComponent.prototype.afterDeleteMainImage = function () {
         var mainImageElement = document.getElementById('mainImage');
         mainImageElement.src = '';
     };
-    ProductAddComponent.prototype.afterSignRequest = function (response) {
+    AddProductImageComponent.prototype.afterSignRequest = function (response) {
         this.upload(this.file, response.signed_request, response.url, this.afterFileUpload);
     };
-    ProductAddComponent.prototype.afterFileUpload = function (url) {
+    AddProductImageComponent.prototype.afterFileUpload = function (url) {
         var mainImageElement = document.getElementById('mainImage');
         mainImageElement.src = url + '?now=' + new Date().getTime();
     };
-    ProductAddComponent.prototype.getProductImages = function () {
+    AddProductImageComponent.prototype.getProductImages = function () {
         var _this = this;
         this.productImageService.getProductImages(this.product.id).subscribe(function (productImages) {
             _this.productImages = productImages;
-            _this.mainImageUrl = _this.awsBucket + _this.productImages[0].Key;
+            _this.mainImageUrl = _this.baseUrl + _this.productImages[0].Key;
             //window.alert('this.productImages.length = ' + this.productImages.length);
             //window.alert('this.productImages[0].Key = ' + this.productImages[0].Key);
         });
     };
-    ProductAddComponent.prototype.addImage = function () {
+    AddProductImageComponent.prototype.addImage = function () {
     };
-    ProductAddComponent.prototype.moveImageUp = function (imageId) {
+    AddProductImageComponent.prototype.moveImageUp = function (imageId) {
         var _this = this;
         this.productImageService.moveImageUp(imageId)
             .subscribe(function (productImages) {
             _this.productImages = productImages;
-            _this.mainImageUrl = _this.awsBucket + _this.productImages[0].Key;
+            _this.mainImageUrl = _this.baseUrl + _this.productImages[0].Key;
         });
     };
-    ProductAddComponent.prototype.moveImageDown = function (imageId) {
+    AddProductImageComponent.prototype.moveImageDown = function (imageId) {
         var _this = this;
         this.productImageService.moveImageDown(imageId)
             .subscribe(function (productImages) {
             _this.productImages = productImages;
-            _this.mainImageUrl = _this.awsBucket + _this.productImages[0].Key;
+            _this.mainImageUrl = _this.baseUrl + _this.productImages[0].Key;
         });
     };
-    ProductAddComponent = __decorate([
-        core_1.Component({
-            selector: 'my-product-details',
-            templateUrl: './product-details.component.html',
-            styleUrls: ['./product-details.component.scss']
-        }), 
-        __metadata('design:paramtypes', [config_service_1.ConfigService, product_service_1.ProductService, product_image_service_1.ProductImageService, router_1.ActivatedRoute, common_1.Location])
-    ], ProductAddComponent);
-    return ProductAddComponent;
+    return AddProductImageComponent;
 }());
-exports.ProductAddComponent = ProductAddComponent;
-//# sourceMappingURL=product-add.component.js.map
+AddProductImageComponent = __decorate([
+    core_1.Component({
+        selector: 'my-add-product-image',
+        templateUrl: './add-product-image.component.html',
+        styleUrls: ['./add-product-image.component.scss']
+    }),
+    __metadata("design:paramtypes", [product_service_1.ProductService,
+        product_image_service_1.ProductImageService,
+        router_1.ActivatedRoute,
+        common_1.Location])
+], AddProductImageComponent);
+exports.AddProductImageComponent = AddProductImageComponent;
+//# sourceMappingURL=add-product-image.component.js.map

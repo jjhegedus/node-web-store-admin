@@ -5,39 +5,32 @@ import { Location } from '@angular/common';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 
-import { ConfigService } from '../config/config.service';
 import { Product } from '../products/product';
 import { ProductService } from '../products/product.service';
 import { ProductImageService } from './product-image.service';
 import { ProductImage } from './ProductImage';
 
 @Component({
-    selector: 'my-product-details',
-    templateUrl: './product-details.component.html',
-    styleUrls: ['./product-details.component.scss']
+    selector: 'my-add-product-image',
+    templateUrl: './add-product-image.component.html',
+    styleUrls: ['./add-product-image.component.scss']
 })
 
-export class ProductAddComponent implements OnInit {
+export class AddProductImageComponent implements OnInit {
     product: Product;
     productImages: Observable<ProductImage[]>;
     //productImages: ProductImage[];
     file: any;
-    awsBucket: string;
+    baseUrl: string;
     mainImageUrl: string;
-    private config: any;
 
     constructor(
-        private configService: ConfigService,
+
         private productService: ProductService,
         private productImageService: ProductImageService,
         private route: ActivatedRoute,
         private location: Location
     ) {
-        this.configService.getConfig(
-            (config) => {
-                this.config = config;
-                this.awsBucket = config.awsBucket;
-            });
     }
 
     ngOnInit() {
@@ -46,6 +39,8 @@ export class ProductAddComponent implements OnInit {
             this.productService.getProduct(params['id']))
             .subscribe((product) => {
                 this.product = product;
+
+                this.baseUrl = 'https://s3.amazonaws.com/apgv-public-read/';
 
                 this.getProductImages();
             });
@@ -80,11 +75,6 @@ export class ProductAddComponent implements OnInit {
             this.productImageService.getMainImageSignature(this.file.type, this.product.id)
                 .subscribe((response) => this.afterSignRequest(response));
         }
-    }
-
-    onMainImageChange(): void {
-        let fileInputElement: any = document.getElementById("mainImagePicker");
-        this.file = fileInputElement.files[0];
     }
 
     onImageChange(key: string): void {
@@ -140,7 +130,7 @@ export class ProductAddComponent implements OnInit {
     }
 
     afterGetDeleteMainImageAuthorizationHeader(response): void {
-        const url = this.awsBucket + 'img/' + this.product.id + '/main.jpg?now=' + new Date().getTime();
+        const url = 'https://apgv-public-read.s3.amazonaws.com/img/' + this.product.id + '/main.jpg?now=' + new Date().getTime();
 
         let xhr = new XMLHttpRequest();
         xhr.open("DELETE", url);
@@ -174,7 +164,7 @@ export class ProductAddComponent implements OnInit {
             productImages => {
                 this.productImages = productImages;
 
-                this.mainImageUrl = this.awsBucket + this.productImages[0].Key;
+                this.mainImageUrl = this.baseUrl + this.productImages[0].Key;
                 //window.alert('this.productImages.length = ' + this.productImages.length);
                 //window.alert('this.productImages[0].Key = ' + this.productImages[0].Key);
             }
@@ -189,7 +179,7 @@ export class ProductAddComponent implements OnInit {
         this.productImageService.moveImageUp(imageId)
             .subscribe(productImages => {
                 this.productImages = productImages;
-                this.mainImageUrl = this.awsBucket + this.productImages[0].Key;
+                this.mainImageUrl = this.baseUrl + this.productImages[0].Key;
             });
     }
 
@@ -197,7 +187,7 @@ export class ProductAddComponent implements OnInit {
         this.productImageService.moveImageDown(imageId)
             .subscribe(productImages => {
                 this.productImages = productImages;
-                this.mainImageUrl = this.awsBucket + this.productImages[0].Key;
+                this.mainImageUrl = this.baseUrl + this.productImages[0].Key;
             });
 
     }

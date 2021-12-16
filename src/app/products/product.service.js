@@ -1,26 +1,16 @@
 "use strict";
-var core_1 = require('@angular/core');
-var http_1 = require('@angular/http');
-require('rxjs/add/operator/toPromise');
-require('rxjs/add/operator/catch');
-require('rxjs/add/operator/map');
-var config_service_1 = require('../config/config.service');
+var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
+require("rxjs/add/operator/toPromise");
+require("rxjs/add/operator/catch");
+require("rxjs/add/operator/map");
 var ProductService = (function () {
-    function ProductService(http, configService) {
-        var _this = this;
+    function ProductService(http) {
         this.http = http;
-        this.configService = configService;
         this.title = 'Product Service';
-        //private productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products'; // URL to web api
+        this.productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products'; // URL to web api
         //private productsUrl = 'http://localhost:8081/products'; // URL to web api
-        this.productsUrl = '';
         this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        this.configService = configService;
-        this.configService.getConfig(function (config) {
-            _this.config = config;
-            _this.productsUrl = _this.config.baseUrl + '/products';
-            _this.getProducts();
-        });
     }
     ProductService.prototype.handleError = function (error) {
         console.error('An error occurred', error); // for demo purposes only
@@ -55,11 +45,11 @@ var ProductService = (function () {
         return this.http.delete(url).map(function (res) { return res.json(); }).catch(this.handleError);
     };
     ;
-    ProductService = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Http, config_service_1.ConfigService])
-    ], ProductService);
     return ProductService;
 }());
+ProductService = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [http_1.Http])
+], ProductService);
 exports.ProductService = ProductService;
 //# sourceMappingURL=product.service.js.map

@@ -6,34 +6,16 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { ConfigService } from '../config/config.service';
 import { Product } from './product';
 
 @Injectable()
 export class ProductService {
     title = 'Product Service';
-    //private productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products'; // URL to web api
+    private productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products'; // URL to web api
     //private productsUrl = 'http://localhost:8081/products'; // URL to web api
-    private productsUrl = '';
     private headers = new Headers({ 'Content-Type': 'application/json' });
-    private config: any;
 
-
-    constructor(
-        private http: Http,
-        private configService: ConfigService) {
-
-        this.configService = configService;
-
-        this.configService.getConfig(
-            (config) => {
-                this.config = config;
-
-                this.productsUrl = this.config.baseUrl + '/products';
-
-                this.getProducts();
-            });
-    }
+    constructor(private http: Http) { }
 
 
     private handleError(error: any): Promise<any> {

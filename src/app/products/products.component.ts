@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 import { Product } from './product';
 import { ProductService } from './product.service';
-import { ConfigService } from '../config/config.service';
 
 @Component({
   selector: 'my-products',
@@ -15,22 +14,16 @@ export class ProductsComponent implements OnInit {
 
     products: Product[];
     selectedProduct: Product;
-    config: any;
 
     constructor(
         private productService: ProductService,
-        private router: Router,
-        private configService: ConfigService
+        private router: Router
     ) {
   }
 
   ngOnInit(): void {
       console.log('ProductsComponent:ngOnInit()');
-      this.configService.getConfig(
-          (config) => {
-              this.config = config;
-              this.getProducts();
-          });
+      this.getProducts();
     }
 
   getProducts(): void {
@@ -38,6 +31,9 @@ export class ProductsComponent implements OnInit {
       this.productService.getProducts().subscribe(
           products => {
               this.products = products;
+              //window.alert('products.components.ts: getProducts(): Iside Lambda');
+              //window.alert('products = ' + products);
+              //window.alert('JSON.stringify(products) = ' + JSON.stringify(products));
           });
   }
 
@@ -45,7 +41,7 @@ export class ProductsComponent implements OnInit {
       this.selectedProduct = product;
   }
 
-  deleteProduct(product: Product): void {
+  deleteProducts(product: Product): void {
       this.productService.deleteProduct(product.id).subscribe(
           () => {
               this.products = this.products.filter(p => p !== product);
@@ -53,10 +49,6 @@ export class ProductsComponent implements OnInit {
                   this.selectedProduct = null;
               }
           });
-  }
-
-  addProduct(): void {
-      this.router.navigate(['/details', 'NewProduct']);
   }
 
   gotoDetail(id: string): void {

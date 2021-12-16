@@ -6,7 +6,7 @@
     <ProjectGuid>{c6c8c8bd-79f2-4597-815d-5c1fa5f2e3f1}</ProjectGuid>
     <ProjectHome />
     <ProjectView>ShowAllFiles</ProjectView>
-    <StartupFile>karma-shim.js</StartupFile>
+    <StartupFile>tools\deploy-uat.ts</StartupFile>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
@@ -20,12 +20,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="package.json" />
-    <Content Include="src\app\product-details\product-add.component.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="src\app\product-details\product-add.component.scss">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="src\app\product-details\product-details.component.html" />
     <Content Include="src\app\product-details\product-details.component.scss" />
     <Content Include="src\app\product-search\product-search.component.html" />
@@ -37,6 +31,7 @@
     <Content Include="src\public\img\product-2.jpg" />
     <Content Include="src\public\img\product-3.jpg" />
     <Content Include="src\public\img\product-4.jpg" />
+    <Content Include="tools\deploy-uat.bat" />
     <Content Include="tsconfig.json" />
     <Content Include="tslint.json" />
     <Content Include="typedoc.json" />
@@ -49,12 +44,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="webpack.config.js" />
-    <TypeScriptCompile Include="src\app\config\config.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\product-details\product-add.component.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\product-details\product-details.component.spec.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -105,15 +94,10 @@
     <TypeScriptCompile Include="src\app\shared\api.service.ts" />
     <TypeScriptCompile Include="src\app\shared\index.ts" />
     <Content Include="src\public\img\favicon.ico" />
+    <TypeScriptCompile Include="tools\deploy-uat.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="apgv" />
-    <Folder Include="deploy\" />
-    <Folder Include="deploy\dev\" />
-    <Folder Include="deploy\data-stage\" />
-    <Folder Include="deploy\prod\" />
-    <Folder Include="deploy\uat\" />
-    <Folder Include="deploy\test\" />
     <Folder Include="src" />
     <Folder Include="src\app" />
     <Folder Include="src\app\about" />
@@ -128,6 +112,7 @@
     <Folder Include="src\public" />
     <Folder Include="src\public\img" />
     <Folder Include="src\style" />
+    <Folder Include="tools\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->

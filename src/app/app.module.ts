@@ -7,37 +7,32 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { ProductsComponent } from './products/products.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ProductService } from './products/product.service';
 import { ProductImageService } from './product-details/product-image.service';
-import { ConfigService } from './config/config.service';
 import { ApiService } from './shared';
 import { routing } from './app.routing';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
-
-import { LibModule, ProductCategoriesService, ProductProductCategoriesService } from '22ndtech-angular-lib';
 
 @NgModule({
     imports: [
         BrowserModule,
         HttpModule,
         FormsModule,
-        routing,
-        LibModule
+        routing
     ],
     declarations: [
         AppComponent,
         HomeComponent,
         AboutComponent,
-        ProductsComponent
+        ProductsComponent,
+        ProductDetailsComponent
     ],
     providers: [
         ApiService,
         ProductService,
-        ProductImageService,
-        ConfigService,
-        ProductCategoriesService,
-        ProductProductCategoriesService
+        ProductImageService
     ],
     bootstrap: [AppComponent]
 })

@@ -1,21 +1,21 @@
 "use strict";
-var core_1 = require('@angular/core');
-var _22ndtech_angular_lib_1 = require('22ndtech-angular-lib');
+var core_1 = require("@angular/core");
 var HomeComponent = (function () {
-    function HomeComponent(cartService) {
-        this.cartService = cartService;
-        this.pageName = 'Home';
-        console.log(this.cartService);
+    function HomeComponent() {
+        // Do stuff
     }
-    HomeComponent = __decorate([
-        core_1.Component({
-            selector: 'my-home',
-            templateUrl: './home.component.html',
-            styleUrls: ['./home.component.scss']
-        }), 
-        __metadata('design:paramtypes', [_22ndtech_angular_lib_1.CartService])
-    ], HomeComponent);
+    HomeComponent.prototype.ngOnInit = function () {
+        console.log('Hello Home');
+    };
     return HomeComponent;
 }());
+HomeComponent = __decorate([
+    core_1.Component({
+        selector: 'my-home',
+        templateUrl: './home.component.html',
+        styleUrls: ['./home.component.scss']
+    }),
+    __metadata("design:paramtypes", [])
+], HomeComponent);
 exports.HomeComponent = HomeComponent;
 //# sourceMappingURL=home.component.js.map

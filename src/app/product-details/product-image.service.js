@@ -1,30 +1,20 @@
 "use strict";
-var core_1 = require('@angular/core');
-var http_1 = require('@angular/http');
+var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
 //import { Http } from '@angular/http';
-require('rxjs/add/operator/toPromise');
-require('rxjs/add/operator/catch');
-require('rxjs/add/operator/map');
-var config_service_1 = require('../config/config.service');
+require("rxjs/add/operator/toPromise");
+require("rxjs/add/operator/catch");
+require("rxjs/add/operator/map");
 //import { Product } from '../products/product';
 var ProductImageService = (function () {
-    function ProductImageService(http, configService) {
-        var _this = this;
+    function ProductImageService(http) {
         this.http = http;
-        this.configService = configService;
         this.title = 'Product Service';
         //private productImageUrl = 'http://localhost:8081/products/images'; // URL to web api
-        //private productImageUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products/images'; // URL to web api   //private headers = new Headers({ 'Content-Type': 'application/json' });
+        this.productImageUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products/images'; // URL to web api   //private headers = new Headers({ 'Content-Type': 'application/json' });
         //private imagesUrl = 'https://s3.amazonaws.com/apgv-public-read/img/';
-        //private productsUrl = 'http://localhost:8081/products'
-        //private productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products';
-        this.productsUrl = '';
-        this.productImageUrl = '';
-        this.configService.getConfig(function (config) {
-            _this.config = config;
-            _this.productsUrl = _this.config.baseUrl + '/products';
-            _this.productImageUrl = _this.config.baseUrl + '/products/images';
-        });
+        //private productsUrl = 'http://localhost:8081/products';
+        this.productsUrl = 'http://ec2-34-207-115-234.compute-1.amazonaws.com/products'; // URL to web api
     }
     ProductImageService.prototype.handleError = function (error) {
         console.error('An error occurred', error); // for demo purposes only
@@ -32,10 +22,6 @@ var ProductImageService = (function () {
     };
     ProductImageService.prototype.getMainImageSignature = function (fileType, productId) {
         var url = this.productImageUrl + "/sign?file_name=main.jpg&file_type=" + fileType + "&product_id=" + productId;
-        return this.http.get(url).map(function (res) { return res.json(); });
-    };
-    ProductImageService.prototype.getImageSignature = function (fileName, fileType, productId) {
-        var url = this.productImageUrl + "/sign?file_name=" + fileName + "&file_type=" + fileType + "&product_id=" + productId;
         return this.http.get(url).map(function (res) { return res.json(); });
     };
     ProductImageService.prototype.getDeleteMainImageAuthorizationHeader = function (fileType, productId) {
@@ -71,15 +57,11 @@ var ProductImageService = (function () {
         var url = this.productImageUrl + "/" + imageId + "/move-down";
         return this.http.put(url, null).map(function (res) { return res.json(); });
     };
-    ProductImageService.prototype.delete = function (imageId) {
-        var url = this.productImageUrl + "/" + imageId;
-        return this.http.delete(url, null).map(function (res) { return res.json(); });
-    };
-    ProductImageService = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Http, config_service_1.ConfigService])
-    ], ProductImageService);
     return ProductImageService;
 }());
+ProductImageService = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [http_1.Http])
+], ProductImageService);
 exports.ProductImageService = ProductImageService;
 //# sourceMappingURL=product-image.service.js.map

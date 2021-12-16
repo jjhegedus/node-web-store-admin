@@ -1,8 +1,8 @@
 "use strict";
 // This shows a different way of testing a component, check about for a simpler one
-var core_1 = require('@angular/core');
-var testing_1 = require('@angular/core/testing');
-var home_component_1 = require('./home.component');
+var core_1 = require("@angular/core");
+var testing_1 = require("@angular/core/testing");
+var home_component_1 = require("./home.component");
 describe('Home Component', function () {
     var html = '<my-home></my-home>';
     beforeEach(function () {
@@ -18,10 +18,9 @@ describe('Home Component', function () {
 var TestComponent = (function () {
     function TestComponent() {
     }
-    TestComponent = __decorate([
-        core_1.Component({ selector: 'my-test', template: '' }), 
-        __metadata('design:paramtypes', [])
-    ], TestComponent);
     return TestComponent;
 }());
+TestComponent = __decorate([
+    core_1.Component({ selector: 'my-test', template: '' })
+], TestComponent);
 //# sourceMappingURL=home.component.spec.js.map

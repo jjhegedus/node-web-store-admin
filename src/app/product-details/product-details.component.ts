@@ -5,12 +5,10 @@ import { Location } from '@angular/common';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 
-import { ConfigService } from '../config/config.service';
 import { Product } from '../products/product';
 import { ProductService } from '../products/product.service';
 import { ProductImageService } from './product-image.service';
 import { ProductImage } from './ProductImage';
-//import { ConfigService } from '../config/config.service';
 
 @Component({
     selector: 'my-product-details',
@@ -20,53 +18,32 @@ import { ProductImage } from './ProductImage';
 
 export class ProductDetailsComponent implements OnInit {
     product: Product;
-    productId: string;
     productImages: Observable<ProductImage[]>;
     //productImages: ProductImage[];
     file: any;
-    awsBucket: string;
+    baseUrl: string;
     mainImageUrl: string;
-    newProduct: boolean;
-    private config: any;
 
     constructor(
-        private configService: ConfigService,
+
         private productService: ProductService,
         private productImageService: ProductImageService,
         private route: ActivatedRoute,
         private location: Location
     ) {
-        this.configService.getConfig(
-            (config) => {
-                this.config = config;
-
-                this.awsBucket = this.config.awsBucket;
-            });
     }
 
     ngOnInit() {
         console.log('product-details.component:ngOnInit()');
-        this.route.params.filter((item) => { return item['id']; }).subscribe((next) => {
-            if (next['id'] == 'NewProduct') {
-                this.newProduct = true;
+        this.route.params.switchMap((params: Params) =>
+            this.productService.getProduct(params['id']))
+            .subscribe((product) => {
+                this.product = product;
 
-                this.product = new Product();
-                this.productId = this.product.id;
-            } else {
-                this.productId = next['id'];
-                this.newProduct = false;
+                this.baseUrl = 'https://s3.amazonaws.com/apgv-public-read/';
 
-                this.route.params.switchMap((params: Params) =>
-                    this.productService.getProduct(params['id']))
-                    .subscribe((product) => {
-                        this.product = product;
-
-                        //alert(this.configService.getConfig('test2'));
-                        this.getProductImages();
-                    });
-            }
-        });
-
+                this.getProductImages();
+            });
     }
 
     goBack(): void {
@@ -74,36 +51,29 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     save(): void {
-        if (this.newProduct) {
-            this.productService.createProduct(this.product).subscribe((product) => {
-                this.product = product;
-                this.goBack();
-            });
-        } else {
-            this.productService.updateProduct(this.product)
-                .subscribe(() => console.log('this.product.id = ' + this.product.id));
+        this.productService.updateProduct(this.product)
+            .subscribe(() => console.log('this.product.id = ' + this.product.id));
 
-            if (this.file) {
-                //window.alert('this.file.name = ' + this.file.name + '\r' + 'this.file.type = ' + this.file.type);
+        if (this.file) {
+            //window.alert('this.file.name = ' + this.file.name + '\r' + 'this.file.type = ' + this.file.type);
 
-                //this.signRequest(this.file, this.afterSignRequest);
+            //this.signRequest(this.file, this.afterSignRequest);
 
-                //let mainImageElement: any = document.getElementById('mainImage');
-                //if (mainImageElement.src) {
-                //    this.productImageService.deleteMainImage(this.product.id)
-                //        .subscribe(() => {
-                //            let mainImageElement: any = document.getElementById('mainImage');
-                //            mainImageElement.src = '';
+            let mainImageElement: any = document.getElementById('mainImage');
+            if (mainImageElement.src) {
+                this.productImageService.deleteMainImage(this.product.id)
+                    .subscribe(() => {
+                        let mainImageElement: any = document.getElementById('mainImage');
+                        mainImageElement.src = '';
 
-                //            this.productImageService.getMainImageSignature(this.file.type, this.product.id)
-                //                .subscribe((response) => this.afterSignRequest(response))
-                //        });
-                //}
-
-
-                this.productImageService.getMainImageSignature(this.file.type, this.product.id)
-                    .subscribe((response) => this.afterSignRequest(response));
+                        this.productImageService.getMainImageSignature(this.file.type, this.product.id)
+                        .subscribe((response) => this.afterSignRequest(response))
+                    });
             }
+
+
+            this.productImageService.getMainImageSignature(this.file.type, this.product.id)
+                .subscribe((response) => this.afterSignRequest(response));
         }
     }
 
@@ -137,7 +107,7 @@ export class ProductDetailsComponent implements OnInit {
         xhr.setRequestHeader('x-amz-acl', 'public-read');
         xhr.onload = () => {
             if (xhr.status === 200) {
-                done(url, this);
+                done(url);
             } else if (xhr.status === 403) {
                 this.delete(file, signed_request, url, done);
             }
@@ -165,7 +135,7 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     afterGetDeleteMainImageAuthorizationHeader(response): void {
-        const url = this.awsBucket + 'img/' + this.product.id + '/main.jpg?now=' + new Date().getTime();
+        const url = 'https://apgv-public-read.s3.amazonaws.com/img/' + this.product.id + '/main.jpg?now=' + new Date().getTime();
 
         let xhr = new XMLHttpRequest();
         xhr.open("DELETE", url);
@@ -189,12 +159,9 @@ export class ProductDetailsComponent implements OnInit {
         this.upload(this.file, response.signed_request, response.url, this.afterFileUpload);
     }
 
-    afterFileUpload(url, thisObject): void {
-        //let mainImageElement: any = document.getElementById('mainImage');
-        //mainImageElement.src = url + '?now=' + new Date().getTime();
-        console.log(url);
-        thisObject.getProductImages();
-        thisObject.location.replaceState(window.location.href);
+    afterFileUpload(url): void {
+        let mainImageElement: any = document.getElementById('mainImage');
+        mainImageElement.src = url + '?now='+new Date().getTime();
     }
 
     getProductImages(): void {
@@ -202,56 +169,22 @@ export class ProductDetailsComponent implements OnInit {
             productImages => {
                 this.productImages = productImages;
 
-                if (this.productImages[0]) {
-                    this.mainImageUrl = this.awsBucket + this.productImages[0].Key;
-                }
+                this.mainImageUrl = this.baseUrl + this.productImages[0].Key;
+                //window.alert('this.productImages.length = ' + this.productImages.length);
+                //window.alert('this.productImages[0].Key = ' + this.productImages[0].Key);
             }
         );
     }
 
-    addImageOld(): void {
-        alert('add image');
-        var inputFileElement = document.createElement('input');
-        inputFileElement.type = 'file';
-        inputFileElement.onchange = () => {
-            alert('change');
-            this.file = inputFileElement.files[0];
-            alert('this.file.name = ' + this.file.name);
-            this.productImageService.getImageSignature(this.file.name, this.file.type, this.product.id)
-                .subscribe((response) => {
-                    return this.afterSignRequest(response);
-                });
-        };
-        inputFileElement.style.visibility = "hidden";
-
-        document.body.appendChild(inputFileElement);
-        inputFileElement.click();
-    }
-
     addImage(): void {
-        let addImageInputElement: any = document.getElementById("addImageInput");
-        addImageInputElement.style.visibility = "visible";
 
-        addImageInputElement.click();
-    }
-
-    imageAdded(): void {
-        let addImageInputElement: any = document.getElementById("addImageInput");
-        this.file = addImageInputElement.files[0];
-        var fileName = prompt("Input image name", this.file.name);
-        this.productImageService.getImageSignature(fileName, this.file.type, this.product.id)
-            .subscribe((response) => {
-                let addImageInputElement: any = document.getElementById("addImageInput");
-                addImageInputElement.style.visibility = "hidden";
-                return this.afterSignRequest(response);
-            });
     }
 
     moveImageUp(imageId): void {
         this.productImageService.moveImageUp(imageId)
             .subscribe(productImages => {
                 this.productImages = productImages;
-                this.mainImageUrl = this.awsBucket + this.productImages[0].Key;
+                this.mainImageUrl = this.baseUrl + this.productImages[0].Key;
             });
     }
 
@@ -259,17 +192,9 @@ export class ProductDetailsComponent implements OnInit {
         this.productImageService.moveImageDown(imageId)
             .subscribe(productImages => {
                 this.productImages = productImages;
-                this.mainImageUrl = this.awsBucket + this.productImages[0].Key;
+                this.mainImageUrl = this.baseUrl + this.productImages[0].Key;
             });
 
     }
 
-    deleteImage(imageId): void {
-        this.productImageService.delete(imageId)
-            .subscribe(rawResponse => {
-                if (rawResponse.ok) {
-                    this.getProductImages();
-                };
-            });
-    }
 }
